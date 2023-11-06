@@ -1,0 +1,60 @@
+<div *ngIf="issuer$ | async as issuer" class="w-full text-gray-700 h-full 
+flex flex-col justify-center items-center">
+    <div class="max-w-lg w-full flex flex-col justify-center
+     rounded-xl bg-white shadow-2xl shadow-red-50 p-8">
+        <img class="h-8 object-contain" [src]="issuer.infoData.logo | toUrlIPFS" alt="" srcset="">
+        <div class="w-full text-center mt-4 text-sm leading-6">
+            {{issuer.infoData.name}} is using Polycode TxGuard <br>
+            and has 
+            <span class="text-red-500 font-medium">
+                detected a potentially dangerous contract call
+            </span>
+
+            <div class="mt-4 py-2 flex flex-row justify-center items-center font-medium
+             text-red-500 bg-red-50 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+                class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+                <div class="ml-2">This is a vulnerable or exploited contract</div>
+            </div>
+
+            <div class="w-full text-left rounded-lg 
+                py-4 pr-8 mt-4  text-slate-700">
+                
+                <div class="font-semibold uppercase flex flex-row items-center text-red-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+                    class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                    </svg>  
+                    <div class="ml-2">
+                        Vulnerability description:
+                    </div>                    
+                </div>
+                <div class="mt-2 text-xs leading-5 pl-6 text-gray-500">
+                    This smart contract was exploited on January 27th, 2021, which resulted
+                    in a loss of funds. As of October, 2022 - the developer has not yet patched
+                    the vulnerability.
+                </div>
+
+            </div>
+
+            <div class="mt-8 text-xs text-gray-500 leading-5">
+                Please exercise caution if interacting with this contract as 
+                using it may lead to a complete loss of funds.
+            </div>
+            
+            <button routerLink="../" class="mt-8 uppercase w-full text-xs font-semibold
+             py-3 rounded-full shadow-lg hover:shadow-red-50
+              bg-red-600 text-red-50 hover:bg-red-800">
+                I understand the warning and wish to proceed
+            </button>
+
+            <div class="mt-12 text-xs font-medium text-gray-500">
+                <a class="underline" href="">Click here</a> to learn more about Polycode TxGuard
+            </div>
+        
+        </div>
+        
+    </div>
+</div>

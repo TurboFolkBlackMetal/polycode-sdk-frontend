@@ -1,0 +1,48 @@
+<div class="p-4 border border-gray-200 rounded-b-lg rounded-tr-lg">
+    <div class="flex flex-row">
+        <div class="w-full px-4 border-r pt-4 border-gray-200">
+            <form id="wallet-address" [formGroup]="newAuthRequestForm">
+
+
+                <div class="flex flex-row items-center w-full">
+                    <div class="w-1/2">
+                        <label
+                        class="font-semibold mt-2 text-gray-700">Before authorization message</label>
+                        <small class="text-gray-500 block">Message to be displayed in the Polycode execution environment before the user authorizes themselves</small>
+        
+                        <input class="rounded-lg border-gray-200 mt-1 mb-4 text-sm w-full" 
+                        formControlName="beforeMessage" type="text">
+                    </div>
+                    
+                    <div class="w-1/2 ml-2">
+                        <label
+                        class="font-semibold text-gray-700">After authorization message</label>
+                        <small class="text-gray-500 block">Message to be displayed after the user finishes authorization. This can be used to prompt the user to a following action or to thank for the authorization.</small>
+        
+                        <input class="rounded-lg border-gray-200 mt-1 mb-2 text-sm w-full" 
+                        formControlName="afterMessage" type="text">
+                    </div>
+                   
+                </div>
+                
+
+                <label
+                class="font-semibold text-gray-700">Amount</label>
+                <small class="text-gray-500 block">You can create one or multiple requests with the same Before and After message.</small>
+
+                <input class="rounded-lg border-gray-200 mt-1 text-sm w-full" value="1"
+                formControlName="requestsAmount" type="number">
+
+                <div class="flex flex-row items-center">
+                    <button app-action-button [onClick]="submitClicked().bind(this)" text="Create Authorization Request(s)" type="submit"
+                    class="px-14 uppercase py-2 mt-4 hover:bg-violet-900 transition-all
+                    flex flex-row items-center rounded-full text-xs bg-violet-700 text-white font-semibold">
+                        
+                    </button>
+                </div>
+
+                
+            </form>
+        </div>
+    </div>
+</div>

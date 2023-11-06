@@ -1,0 +1,156 @@
+<div
+  class="bg-transparent flex max-w-[1400px] pl-4 w-screen flex-col transition-all lg:flex-row lg:justify-center"
+  [class.min-h-screen]="isDropdownOpen$ | async"
+>
+  <!-- Navbar -->
+  <div
+    class="w-full h-16 px-4 flex items-center justify-between sticky max-w-[1400px] lg:h-20"
+    [class]="(isDropdownOpen$ | async) ? 'fixed' : ''"
+  >
+    <ng-container *ngIf="(isIssuerAvailable$ | async) === true">
+      <ng-container *ngIf="issuer$ | async as issuerRes">
+        <ng-container *ngIf="issuerRes.value as issuer">
+          <!-- Logo -->
+          <div class="flex flex-col justify-center">
+            <a routerLink="/">
+              <img
+                class="h-8 object-contain flex flex-col justify-end"
+                src="../../../assets/polycode-logo.png"
+                alt="Logo"
+              />
+            </a>
+          </div>
+
+          <!-- Navbar items -->
+          <div class="flex w-full justify-end items-center lg:pr-4">
+
+            <app-wallet-button
+              *ngIf="(isLoggedIn$ | async) === true"
+              class="shrink-0 hidden lg:flex"
+            >
+            </app-wallet-button>
+
+            <button
+              app-action-button
+              class="transition-all shrink-0 lg:mx-4 px-4 py-1 border-2 border-current rounded-full text-sm font-semibold uppercase text-violet-600 whitespace-nowrap inline hover:bg-violet-600 hover:text-white"
+              *ngIf="(isLoggedIn$ | async) === false"
+              [onClick]="login.bind(this)"
+              text="Log in"
+            ></button>
+
+            <!-- <app-google-translate *ngIf="(isMobileScreen$ | async) === false">
+            </app-google-translate> -->
+
+            <!-- Toggle dropdown -->
+            <button
+              class="mx-4 py-4 text-lg font-black text-gray-700 lg:hidden"
+              aria-label="Toggle dropdown"
+              (click)="toggleDropdown()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                [class.hidden]="(isDropdownOpen$ | async) === true"
+                class="w-8 h-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                [class.hidden]="(isDropdownOpen$ | async) === false"
+                class="w-8 h-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="(isIssuerAvailable$ | async) === false">
+      <!-- Logo -->
+      <div class="">
+        <a [routerLink]="'/home'">
+          <img
+            class="h-8"
+            src="../../../assets/polycode-logo.png"
+            alt=""
+            srcset=""
+          />
+        </a>
+      </div>
+
+      <!-- Navbar items -->
+      <!-- <div class="flex justify-end gap-2 items-center">
+        <div class="text-xs font-medium border py-2 px-4 rounded-full flex flex-row items-center" *ngIf="address$ | async as address">
+          <div class="mr-1">{{address | addrShort}}</div>
+          <app-value-copy [value]="address"></app-value-copy>
+        </div>
+        <button
+          app-action-button
+          class="transition-all px-4 py-1 border-2 border-current rounded-full text-sm font-semibold uppercase text-violet-600 whitespace-nowrap inline hover:bg-violet-600 hover:text-white"
+          *ngIf="(isLoggedIn$ | async) === false"
+          [onClick]="login.bind(this)"
+          text="Log in"
+        ></button>
+        <button
+          app-action-button
+          class="transition-all px-4 py-1 border-2 border-current rounded-full text-sm font-semibold uppercase text-gray-500 whitespace-nowrap inline hover:bg-gray-500 hover:text-white"
+          *ngIf="(isLoggedIn$ | async) === true"
+          [onClick]="logout.bind(this)"
+          text="Log out"
+        ></button>
+        
+      </div> -->
+      <div class="h-full flex flex-row items-center">
+        <app-wallet-button></app-wallet-button>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Dropdown -->
+  <div
+    *ngIf="(isDropdownOpen$ | async) === true"
+    class="flex flex-col gap-4 justify-start items-center h-full transition-all lg:hidden"
+  >
+    <!-- Navigation links -->
+    <ng-container *ngFor="let navbarItem of navbarScreenLinks">
+      <button
+        *ngIf="(navbarItem.showItem | async) === true"
+        (click)="toggleDropdown()"
+        class="pt-2 pb-2 text-gray-700 text-lg whitespace-nowrap !border-x !border-y border-transparent font-bold"
+        [routerLink]="navbarItem.routerLink | issuerPath"
+        routerLinkActive="!text-violet-600 !border-violet-600"
+      >
+        {{ navbarItem.title }}
+      </button>
+    </ng-container>
+
+    <app-wallet-button
+      *ngIf="(isLoggedIn$ | async) === true"
+      (click)="toggleDropdown()"
+    >
+    </app-wallet-button>
+
+    <!-- <app-google-translate class="p-2"> </app-google-translate> -->
+  </div>
+</div>
+
+<ng-container *ngIf="dropdownCloser$ | async"></ng-container>

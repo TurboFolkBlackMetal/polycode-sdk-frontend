@@ -1,0 +1,3 @@
+[submodule "dev3-tokenizer-library"]
+	path = dev3-tokenizer-library
+	url = https://github.com/0xDev3/dev3-tokenizer-library

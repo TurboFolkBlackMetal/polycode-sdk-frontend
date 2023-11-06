@@ -1,0 +1,104 @@
+<div class=" bg-blue-50">
+    <app-navbar></app-navbar>
+</div>
+<div class="w-screen min-h-screen pb-24 bg-blue-50 p-4 flex flex-col items-center justify-between">
+    <div></div>
+    <div class="flex flex-col items-center">
+        <img class="h-12" src="../../assets/0xray.png" alt="">
+        <div class="text-lg font-medium mb-4 text-gray-700 flex flex-row items-center">
+            <span>Decompile and use <span class="text-violet-700">any*</span> smart contract.</span>
+        </div>
+        <ng-container *ngIf="(contract$ | async) === null">
+            
+    
+            <div class="max-w-3xl w-full mb-4 mt-8 flex flex-col">
+                <div class="flex flex-row items-center justify-center flex-wrap gap-2">
+                    <div [class.!bg-violet-700]="network === currentNetwork"
+                        [class.!text-white]="network === currentNetwork"
+                        [class.hover:bg-violet-300]="network !== currentNetwork" 
+                        class="text-xs py-2 pl-2 pr-4 font-medium text-slate-700
+                        cursor-pointer rounded-full uppercase
+                      bg-white flex flex-row items-center" *ngFor="let network of networks"
+                        (click)="networkSelected(network.chainID)">
+                        <img [src]="network.iconURL" class="w-4 h-4" alt="">
+                        <span class="ml-2">{{network.name}}</span>
+                    </div>
+                </div>
+            </div>
+    
+    
+    
+            <input [@inOutAnimation] [formControl]="contractFieldControl"
+                class="max-w-3xl w-full py-2 mt-8 mb-2 px-8 text-center text-sm text-gray-700 border-gray-200 rounded-full"
+                [placeholder]="'Paste ' + currentNetwork.name + ' Contract Address'" type="text">
+            <button [disabled]="!contractFieldControl.valid || (txLoading$ | async)"
+             [@inOutAnimation] (click)="searchClicked()"
+                loadingText="🤖 Decompiling & Parsing Contract" class="max-w-3xl px-8 rounded-full mt-4 hover:bg-violet-900 
+                        transition-all disabled:bg-gray-500 flex flex-row items-center justify-center
+                    bg-violet-700 text-white font-semibold uppercase text-sm py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+                            class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L12 12m6.894 5.785l-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864l-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
+                      </svg>
+                      
+                <span *ngIf="(txLoading$ | async) === false" class="ml-2">Start</span>
+                <span *ngIf="(txLoading$ | async)" class="ml-2 flex flex-row items-center">
+                    <app-spinner class="mr-2" type="inline-xs"></app-spinner>
+                    Decompiling & Parsing Contract...
+                </span>
+            </button>
+
+            <div class="mb-2 mt-16 text-sm text-slate-400 text-center">
+                * The parser may fail decompiling some smart contracts (particularily older ones). 
+                <br> If you have issues 
+                importing a contract, we'd appreciate your feedback. ❤️
+            </div>
+            
+        </ng-container>
+        
+    </div>
+    
+
+    
+
+    <div [@inOutAnimation] class="flex flex-col w-full gap-2 max-w-5xl p-4 bg-white rounded-lg"
+        *ngIf="contract$ | async as contract">
+        <button class="px-4 py-2 mb-4 hover:bg-violet-900 font-semibold
+         text-xs uppercase text-white bg-violet-700 justify-center rounded-lg flex flex-row items-center"
+            (click)="searchAgainClicked()">
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                    <path fill-rule="evenodd"
+                        d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z"
+                        clip-rule="evenodd" />
+                </svg>
+            </span>
+            <span class="ml-2">
+                New Search
+            </span>
+
+        </button>
+        <div class="flex flex-row items-center font-semibold 
+        uppercase text-sm text-violet-700">Detected smart contract traits</div>
+        <div class="flex flex-row flex-wrap gap-2">
+            <div class="px-3 py-2 bg-violet-50 rounded-lg font-medium text-violet-700 text-xs flex flex-row"  
+                *ngFor="let tag of contract.implements">
+                {{tag}}
+            </div>
+        </div>
+        <div class="flex flex-row items-center font-semibold mt-4
+         uppercase text-sm text-violet-700">
+            Smart contract available functions
+        </div>
+        <div *ngFor="let functionManifest of contract.functions">
+            <app-contract-function-interaction-item [functionManifest]="functionManifest" [contractID]="'asd'">
+            </app-contract-function-interaction-item>
+        </div>
+    </div>
+
+    <div class="mb-8 font-mono text-gray-500 text-sm">
+        Open-source and free forever. Built by Dev3 Hackers <a class="underline" href="https://github.com/domagojlatecki">Domagoj</a>, 
+        <a class="underline" href="https://github.com/filipdujmusic">Filip</a> and 
+        <a class="underline" href="https://github.com/0xmislav">Mislav</a> on Github!
+    </div>
+</div>

@@ -1,0 +1,383 @@
+<div
+  routerLink="../"
+  class="bg-gray-700 text-white cursor-pointer font-semibold w-40 py-2 ml-4 rounded-full text-center text-sm mt-2"
+>
+  <- Back
+</div>
+
+<div class="pl-4">
+  <div class="bg-white shadow-sm my-4 p-6 rounded-lg w-full flex flex-row">
+    <div class="w-full pr-4">
+      <ng-container *ngIf="snapshot$ | async as snapshotRes">
+        <ng-container *ngIf="snapshotRes.value as snapshot">
+          <ng-container
+            *ngIf="
+              snapshot.asset
+                | assetData: 'tokenOnly'
+                | withStatus
+                | async as assetRes
+            "
+          >
+            <ng-container *ngIf="assetRes.value as asset">
+              <div class="text-base mb-4 font-semibold text-gray-700">
+                Airdropping tokens
+              </div>
+              <div class="text-sm text-gray-700 font-medium">
+                Airdropping from snapshot
+                <span
+                  class="ml-2 text-sm font-semibold text-violet-700"
+                  >{{ snapshot.id }}</span
+                >
+              </div>
+              <div
+                class="mt-4 text-gray-700 flex flex-row items-center text-sm font-medium"
+              >
+                to wallets that were holding <br />
+                <div class="flex flex-row items-center">
+                  <div
+                    class="font-semibold text-violet-700 flex ml-2"
+                  >
+                    {{ asset.tokenData.symbol }}
+                  </div>
+                  <div class="ml-1">
+                    <app-explorer-link 
+                    [value]="asset.tokenData.address" type="token"></app-explorer-link>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-baseline gap-1.5 flex-wrap mt-1">
+                <div class="mt-4 text-gray-700 mr-1 text-sm font-medium">
+                  at time
+                </div>
+
+                <span class="text-sm">
+                  <ng-container
+                    *ngIf="
+                      snapshot.asset_snapshot_block_number
+                        | blockTime
+                        | withStatus
+                        | async as blockTimeRes
+                    "
+                  >
+                    <div
+                      class="text-sm font-semibold text-violet-700"
+                      *ngIf="blockTimeRes.value as blockTime"
+                    >
+                      <span>{{ blockTime | date: "medium" }}</span>
+                    </div>
+
+                    <ng-container *ngIf="blockTimeRes.error">
+                      <span>❌</span>
+                      <div hidden>{{ blockTimeRes.error | json }}</div>
+                    </ng-container>
+
+                    <ng-container *ngIf="blockTimeRes.loading">
+                      <app-spinner type="inline-xs"></app-spinner>
+                    </ng-container>
+                  </ng-container>
+                </span>
+              </div>
+
+              <ng-container
+                *ngIf="snapshot.ignored_holder_addresses.length > 0"
+              >
+                <div class="mt-4">
+                  <h2 class="font-medium text-sm text-gray-700">
+                    The following wallets will be excluded from the airdrop
+                  </h2>
+
+                  <div class="flex flex-col gap-2 mt-4">
+                    <div
+                      *ngFor="
+                        let holderAddress of snapshot.ignored_holder_addresses
+                      "
+                    >
+                      <div class="flex items-baseline gap-1.5 flex-wrap">
+                        <span
+                          class="font-medium text-sm text-violet-700"
+                        >
+                          {{ holderAddress }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="snapshot.status === snapshotStatus.Failed">
+                <div
+                  class="bg-red-100 text-red-600 py-2 px-4 rounded-lg text-sm font-medium"
+                >
+                  We could not generate a snapshot for you.
+                  <span class="underline">Learn more</span>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="snapshot.status === snapshotStatus.Pending">
+                <app-spinner type="overlay" class="mt-4">
+                  Generation of a snapshot cryptographic proof in progress...
+                </app-spinner>
+              </ng-container>
+
+              <ng-container *ngIf="snapshot.status === snapshotStatus.Success">
+
+                <form [formGroup]="newPayoutForm">
+                  <div class="flex flex-col gap-2 mt-4">
+                    <label
+                      class="font-semibold text-gray-700 text-sm"
+                      for="payout-asset-address"
+                    >
+                      Choose the token which you want to airdrop
+                    </label>
+                    <!-- <input
+                      class="border-gray-200 rounded-lg text-sm"
+                      type="text"
+                      formControlName="rewardAssetAddress"
+                      placeholder="Token address"
+                      id="payout-asset-address"
+                      autocomplete="off"
+                    /> -->
+                    <div class="w-full">
+                      <app-smart-input
+                        [rootForm]="newPayoutForm"
+                        controlName="rewardAssetAddress"
+                        [formFinishedLoadingSub]="alwaysTrueSub"
+                        solidityType="address"
+                        [recommendedTypes]="['erc.erc-20']"
+                      ></app-smart-input>
+                    </div>
+
+                    
+                  </div>
+
+                  <ng-container *ngIf="payoutState$ | async as payoutState">
+                    <!-- <div class="flex items-baseline gap-1.5 flex-wrap mt-4">
+                      <span>{{ payoutState.tokenData.symbol }}</span>
+                      <span class="text-sm">
+                        {{ payoutState.tokenData.address | addrShort }}
+                      </span>
+                      <app-value-copy [value]="payoutState.tokenData.address" [delay]="800">
+                      </app-value-copy>
+                      <app-explorer-link [value]="payoutState.tokenData.address">
+                      </app-explorer-link>
+                      <app-add-to-metamask [value]="payoutState.tokenData.address">
+                      </app-add-to-metamask>
+                    </div> -->
+
+                    <div class="mt-4 mb-4 text-sm font-semibold text-gray-700">
+                      Enter the amount of
+                      <span
+                        class=" text-violet-700 mx-1"
+                        >{{ payoutState.tokenData.symbol }}</span
+                      >
+                      you want to airdrop
+                    </div>
+                    <!-- Token box -->
+                    <div
+                      class="mt-2 bg-gray-50 border-gray-200 border rounded-lg px-2 pb-1"
+                    >
+                      <span
+                        class="flex justify-end mt-2 text-xxs font-medium text-gray-400"
+                      >
+                        Amount of {{ payoutState.tokenData.symbol }} you will
+                        distribute
+                      </span>
+
+                      <div class="flex justify-between">
+                        <div class="flex items-center">
+                          <div
+                            class="flex rounded-full items-center bg-white shadow"
+                          >
+                            <div
+                              class="w-7 h-7 bg-white rounded-full overflow-hidden m-1"
+                            >
+                              <img
+                                class="h-full w-full object-cover"
+                                src="{{
+                                  (payoutState.asset?.infoData?.logo
+                                    | toUrlIPFS) ||
+                                    (payoutState.tokenData.symbol
+                                      | toStablecoinLogoPath)
+                                }}"
+                                alt="{{ payoutState.tokenData.symbol }} logo"
+                              />
+                            </div>
+
+                            <span
+                              class="ml-1 mr-3 font-medium whitespace-nowrap"
+                            >
+                              {{ payoutState.tokenData.symbol }}
+                            </span>
+                          </div>
+                        </div>
+
+                        <input
+                          class="w-full py-0 pr-0 text-right bg-transparent border-none focus:ring-0 text-xl text-ellipsis placeholder:text-gray-400"
+                          formControlName="tokenAmount"
+                          appBigNumberInput
+                          bigNumberType="token"
+                          [tokenPrecision]="payoutState.tokenData.decimals"
+                        />
+                      </div>
+
+                      <div
+                        class="flex flex-col gap-2 mt-2 text-orange-400 text-xs font-semibold"
+                        *ngIf="payoutState.feeData as feeData"
+                      >
+                        <span>
+                          Payout fee:
+                          {{
+                            feeData.fee
+                              | formatUnit
+                                : "token"
+                                : payoutState.tokenData.decimals
+                              | currencyDefault
+                                : "token"
+                                : "real"
+                                : payoutState.tokenData.symbol
+                          }}
+                        </span>
+
+                        <span>
+                          Payout amount:
+                          {{
+                            feeData.amount
+                              | formatUnit
+                                : "token"
+                                : payoutState.tokenData.decimals
+                              | currencyDefault
+                                : "token"
+                                : "real"
+                                : payoutState.tokenData.symbol
+                          }}
+                        </span>
+
+                        <span>
+                          Total (amount + fee):
+                          {{
+                            feeData.amountWithFee
+                              | formatUnit
+                                : "token"
+                                : payoutState.tokenData.decimals
+                              | currencyDefault
+                                : "token"
+                                : "real"
+                                : payoutState.tokenData.symbol
+                          }}
+                        </span>
+                      </div>
+
+                      <div class="flex">
+                        <div class="flex items-center min-h-[1rem] mt-2 flex-1">
+                          <ng-container *ngIf="newPayoutForm?.invalid">
+                            <span class="text-red-600 text-xs font-semibold">
+                              <ng-container
+                                *ngIf="
+                                  newPayoutForm.errors?.tokenAmountAboveBalance
+                                "
+                              >
+                                The amount exceeds your token balance.
+                              </ng-container>
+
+                              <ng-container
+                                *ngIf="
+                                  newPayoutForm.errors
+                                    ?.tokenAmountWithFeeAboveBalance
+                                "
+                              >
+                                The amount exceeds your token balance with fee.
+                              </ng-container>
+
+                              <ng-container
+                                *ngIf="newPayoutForm.errors?.feeFetchFailed"
+                              >
+                                The fee cannot be fetched.
+                              </ng-container>
+
+                              <ng-container
+                                *ngIf="
+                                  newPayoutForm.errors?.feeAboveTokenAmount
+                                "
+                              >
+                                The fee is above the given amount.
+                              </ng-container>
+                            </span>
+                          </ng-container>
+                        </div>
+                      </div>
+
+                      <div
+                        class="flex justify-between items-center mt-5 text-xxs font-medium"
+                      >
+                        <div>
+                          <span
+                            class="text-gray-400"
+                            *ngIf="payoutState.balance"
+                          >
+                            Balance:
+                            {{
+                              payoutState.balance
+                                | formatUnit
+                                  : "token"
+                                  : payoutState.tokenData.decimals
+                                | currencyDefault
+                                  : "token"
+                                  : "real"
+                                  : payoutState.tokenData.symbol
+                            }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mt-4">
+                      <button
+                        app-action-button
+                        class="app-button uppercase w-full"
+                        [hidden]="(shouldApprove$ | async) !== true"
+                        [disabled]="newPayoutForm.invalid"
+                        [onClick]="approveAmount(payoutState).bind(this)"
+                        text="Approve"
+                      ></button>
+
+                      <button
+                        app-action-button
+                        class="app-button w-full uppercase text-sm"
+                        [hidden]="(shouldCreatePayout$ | async) !== true"
+                        [disabled]="newPayoutForm.invalid"
+                        [onClick]="
+                          createPayout(payoutState, snapshot).bind(this)
+                        "
+                        text="Begin airdrop ->"
+                      ></button>
+                    </div>
+                  </ng-container>
+                </form>
+              </ng-container>
+            </ng-container>
+
+            <ng-container *ngIf="assetRes.error">
+              Cannot fetch asset.
+              <div hidden>{{ assetRes.error | json }}</div>
+            </ng-container>
+
+            <ng-container *ngIf="assetRes.loading">
+              Loading asset...
+            </ng-container>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="snapshotRes.error">
+          Cannot fetch snapshot.
+          <div hidden>{{ snapshotRes.error | json }}</div>
+        </ng-container>
+
+        <ng-container *ngIf="snapshotRes.loading">
+          Loading snapshot...
+        </ng-container>
+      </ng-container>
+    </div>
+
+  </div>
+</div>

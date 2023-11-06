@@ -1,0 +1,76 @@
+<div class="bg-white max-w-sm w-full border 
+        shadow-lg shadow-blue-200 rounded-lg p-8">
+            <div class="flex flex-row items-center justify-between
+             text-lg mb-8 text-gray-500 font-semibold uppercase">
+                <div>{{subscription.name}}</div>
+            </div>
+            <div class="text-sm text-gray-500">
+                {{subscription.description}} --- 
+                {{subscription.id}}
+            </div>
+            <hr class="my-4">
+            <div class="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-cyan-600
+             font-bold mt-2 text-violet-700" *ngFor="let price of subscription.prices">
+                <div *ngIf="price.interval_type === 'MONTH'">
+                    {{(price.amount / 100) | currency:(price.currency | uppercase):'symbol'}}/mo
+                </div>
+            </div>
+            <div class="mt-4 text-sm text-gray-600 mb-2">Discount available if billed yearly</div>
+            <div class="text-xl font-bold text-violet-700" *ngFor="let price of subscription.prices">
+                <div class="text-xl" *ngIf="price.interval_type === 'YEAR'">
+                    {{(price.amount / 100 / 12) 
+                        | currency:(price.currency 
+                        | uppercase):'symbol'}}/mo
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-sm text-gray-500">
+                Up to
+                {{subscription.write_requests}}
+                write transactions per month
+            </div>
+            <div class="text-sm mt-2 text-gray-500">
+                Up to
+                {{subscription.read_requests}}
+                read transactions per month
+            </div>
+
+            <input *ngIf="showBuyButtons$ | async" [formControl]="emailFormControl" class="w-full mt-8 border-gray-200 rounded-lg px-4 text-xs" 
+            placeholder="email@provider.com"
+            type="email" name="" id="">
+            <div class="text-xxs mb-6 text-gray-400 mt-1">We don't use or process your email, 
+                we need it to create your subscription on <a class="underline text-violet-700" href="https://stripe.com">Stripe</a> </div>
+            
+            <div *ngFor="let price of subscription.prices">
+                
+                <button [hidden]="(showBuyButtons$ | async) === false"
+                app-action-button [disabled]="!emailFormControl.valid"
+                [onClick]="buyButtonClicked(subscription.id, subscription.prices[0].id).bind(this)" 
+                    text="Buy subscription ({{price.interval_type}})"
+                    class="w-full py-2 disabled:bg-slate-200 disabled:text-slate-400
+                     rounded-full hover:bg-violet-900
+                 bg-violet-700 text-sm text-white uppercase text-center font-semibold">        
+                </button>
+    
+                <form class="mt-4" id="payment-form">
+                    <div id="payment-element-{{price.id}}">
+                      <!-- Elements will create form elements here -->
+                    </div>
+                    <div id="error-message">
+                      <!-- Display error message to your customers here -->
+                    </div>
+                </form>
+            </div>
+            <button (click)="formCompleteClicked()" class="w-full rounded-full bg-violet-700 py-2
+             text-white text-sm uppercase font-semibold"
+             [class.animate-pulse]="submitFormButtonClicked$ | async"
+             [disabled]="submitFormButtonClicked$ | async"
+                *ngIf="((showBuyButtons$ | async) === false) && ((showSpinner$ | async) === false) ">
+                    <div *ngIf="submitFormButtonClicked$ | async; else submitLabel">Processing payment...</div>
+                    <ng-template #submitLabel>Submit</ng-template>
+            </button>
+            <div class="w-full flex flex-row items-center hover:bg-violet-900 justify-center">
+                <app-spinner *ngIf="showSpinner$ | async"></app-spinner>
+            </div>
+
+        </div>

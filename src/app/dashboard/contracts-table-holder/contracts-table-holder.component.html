@@ -1,0 +1,358 @@
+<div [@inOutAnimation] class=" bg-white shadow-sm p-8 ml-4 mt-1 rounded-lg flex flex-col">
+  <div class="flex flex-row justify-between">
+
+    <div class="flex flex-row justify-start items-end">
+      <!-- TOKENS -->
+      <div (click)="changeTab(tabType.Manage)" [class.active-content-item]="activeTab === tabType.Manage"
+        class="w-52 text-center border-gray-200 flex flex-row items-center justify-center text-sm uppercase 
+        pb-4 border-b-4 font-semibold text-gray-500 cursor-pointer transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+        </svg>
+        <div class="ml-2">
+          My Contracts
+        </div>
+      </div>
+
+      <!-- PENDING -->
+      <div (click)="changeTab(tabType.Pending)" [class.active-content-item]="activeTab === tabType.Pending"
+        class="w-60 text-center border-gray-200 flex flex-row items-center justify-center text-sm uppercase pb-4 
+        border-b-4 font-semibold text-gray-500 cursor-pointer transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div class="ml-2">Pending Transactions</div>
+      </div>
+    </div>
+
+
+    <div class="flex flex-row justify-end items-end">
+      <!-- NEW -->
+      <div (click)="changeTab(tabType.Add)" class=" flex flex-row justify-center 
+items-center pb-2 text-center text-sm font-semibold transition-all
+border-b-4 border-transparent text-gray-700 uppercase cursor-pointer">
+
+        <div [class.text-white]="activeTab === tabType.Add" 
+        [class.!bg-violet-700]="activeTab === tabType.Add"
+          class="w-56 py-2 mx-1 bg-gray-50 border hover:bg-gray-200 border-gray-200 rounded-full 
+          flex flex-row items-center justify-center">
+
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+          </svg>
+          
+          
+          <div class="ml-2">Deploy from template</div>
+        </div>
+      </div>
+
+      <!-- IMPORT -->
+      <div (click)="changeTab(tabType.Import)" class=" flex flex-row justify-center 
+items-center pb-2 text-center text-sm font-semibold border-b-4
+text-gray-700 uppercase border-transparent cursor-pointer">
+
+        <div [class.text-white]="activeTab === tabType.Import" [class.!bg-violet-700]="activeTab === tabType.Import"
+          class="w-48 py-2 mx-1 bg-gray-50 hover:bg-gray-200 border border-gray-200 rounded-full flex flex-row items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          <div class="ml-2">Import deployed</div>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+
+  <!-- DEPLOY TAB -->
+  <ng-container *ngIf="activeTab === tabType.Add">
+
+    <div [@inOutAnimation] *ngIf="deployableContracts$ | async as deployableContracts; else loading">
+      <div class="p-4 border rounded-tr-lg bg-blue-50">
+        <app-info-snippet [hasInfoToggle]="true" type="INFO" [hasBorderAndBackground]="false"
+          [content]="{ title: 'Writing your own smart contracts?', sections: [
+        'Polycode allows you to import & use your own smart contracts.', 'This feature is under development and will be released soon!'] }"></app-info-snippet>
+      </div>
+      <div class="w-full px-6 py-4 text-sm bg-amber-50 text-amber-800 border">
+        This is a community curated repository of pre-built smart contracts. Polycode doesn't give any guarantees for any contract that is not audited. 
+        You can recognize audited contracts by the checkmark to the left of their name. <br><br>
+        This is an open source library - check out the repository <a target="_blank" class=" font-semibold underline" href="https://github.com/0xDev3/dev3-contracts">here</a>
+      </div>
+
+      <div class="flex flex-row border-violet-500 border-x border-t border-b">
+        <div class="w-10/12 flex flex-row">
+          <div class="w-1/12 border-r flex bg-violet-500 text-white flex-row items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
+            class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            
+          </div>
+          <form class="w-11/12 flex flex-row">
+            <input (input)="onSearchChange($event.target)"
+              class="w-full border-none py-3 text-sm px-4" placeholder="Search contracts" type="text">
+          </form>
+        </div>
+        <div class="w-2/12 flex flex-row items-center justify-center border-violet-500 border-l">         
+          <div class="mr-2 ml-2 text-sm font-medium text-gray-500">Only audited</div>
+          <input (change)="onlyAuditedCheckChange($event.target)" type="checkbox" name="" class="w-4 h-4 text-violet-700 bg-gray-100 rounded border-gray-300" id="">
+        </div>
+      </div>
+
+      <div *ngFor="let contract of deployableContracts" class="border-gray-100 border-x border-b p-4 flex flex-row">
+        <div class="w-3/12 font-medium text-gray-700 text-sm flex flex-row items-center">
+          <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
+          class="w-4 h-4 text-amber-600">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          </svg>           -->
+          <svg *ngIf="contract.audited" [matTooltip]="'Audited'" 
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-green-600">
+            <path fill-rule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+          </svg>
+          
+          <svg *ngIf="!contract.audited" [matTooltip]="'Not audited'"
+           xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-orange-300">
+            <path fill-rule="evenodd" d="M10.339 2.237a.532.532 0 00-.678 0 11.947 11.947 0 01-7.078 2.75.5.5 0 00-.479.425A12.11 12.11 0 002 7c0 5.163 3.26 9.564 7.834 11.257a.48.48 0 00.332 0C14.74 16.564 18 12.163 18 7.001c0-.54-.035-1.07-.104-1.59a.5.5 0 00-.48-.425 11.947 11.947 0 01-7.077-2.75zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+          </svg>
+          
+          
+          
+                  
+          <div class="ml-2 flex flex-col">
+            <div class="text-xs text-gray-500 font-light">{{ contract.splitID[0] }}</div>
+            <div class="font-medium">
+              {{ contract.name }}
+            </div>
+          </div>          
+        </div>
+        <div class="w-7/12 text-sm flex flex-col justify-start pr-4 text-gray-500">
+          <div class="flex flex-col h-full text-sm flex-wrap justify-start">
+            <div>
+              {{contract.description}}
+            </div>
+            <div class="flex flex-row flex-wrap">
+              <div class="pr-1 text-xxs text-violet-400" *ngFor="let tag of contract.tags">
+                #{{tag}}
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="w-2/12 flex flex-col justify-center">
+          <button class="bg-gray-200 rounded-full flex flex-row items-center justify-center 
+            px-8 py-3 font-semibold uppercase hover:bg-gray-300 transition-all
+           text-gray-700 text-xs" [routerLink]="'create/from-manifest/' + contract.id">
+           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+          
+            <div class="ml-2">Create</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <!-- PENDING TAB -->
+  <ng-container *ngIf="activeTab === tabType.Pending">
+    <div [@inOutAnimation] *ngIf="pendingContractDeploymentRequests$ | async as requests; else loading" >
+      <app-info-snippet [hasInfoToggle]="true" [hasRoundedCorners]="false" [content]="{
+        title: 'Pending contract deployment requests',
+        sections: [ 'This tab contains pending contract deployment transactions.',
+        'You can execute these transactions yourself or share them with other people!' ]
+      }" [actionLinkButton]="{
+          title: '📖 Read the docs',
+          href: 'https://docs.dev3.sh'
+      }"></app-info-snippet>
+  <div class=" text-violet-700 border-x border-b text-xs p-4 flex flex-row bg-violet-50">
+    <div class="w-3/12 uppercase font-semibold">Alias</div>
+    <div class="w-4/12 uppercase font-semibold">Contract Type</div>
+    <div class="w-2/12 uppercase font-semibold">Created at</div>
+    <div class="w-3/12 uppercase font-semibold flex flex-ro rounded-lg items-center justify-center">
+    </div>
+  </div>
+
+  <div>
+    <ng-container *ngIf="requests.length > 0; else emptyList">
+      <div *ngFor="let request of requests; let i = index">
+        <div class="py-2 pl-4 border-b font-medium flex 
+        flex-row items-center text-sm text-gray-700 border-x">
+          <div class="w-3/12 text-sm font-medium">
+            {{request.alias}}
+          </div>
+          <div class="w-4/12">
+            <div *ngIf="manifests$ | async as manifests; else manifestLoading">
+              {{manifests[i].name}}
+            </div>
+            <ng-template #manifestLoading>
+              <app-spinner></app-spinner>
+            </ng-template>
+          </div>
+          <div class="w-2/12">
+            {{request.created_at | date:'short'}}
+          </div>
+          <a target="_blank" [routerLink]="'/request-deploy/' + request.id + '/action' | issuerPath"
+            class="w-3/12 px-2 cursor-pointer">
+            <div class="w-full py-2 bg-gray-700 text-white rounded-full flex flex-row items-center justify-center
+             text-center uppercase text-xs font-semibold hover:bg-violet-900 transition-all">
+              Open Link
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </ng-container>
+
+
+  </div>
+    </div>
+ 
+
+  </ng-container>
+
+  <!-- MY CONTRACTS TAB -->
+  <ng-container *ngIf="activeTab === tabType.Manage">
+    <div [@inOutAnimation]  *ngIf="deployedContracts$ | async as deployedContracts; else loading">
+      <app-info-snippet [hasInfoToggle]="true" [hasRoundedCorners]="false" [content]="{
+        title: 'Deploy, connect or browse',
+        sections: ['This tab contains all the smart contracts you can interact with in this project!',
+        'There are three ways to interact with a contract - deploy a contract from our pre-built library, import a contract you already deployed or browse and select deployed contracts from popular protocols and apps!']
+      }"></app-info-snippet>
+      <ng-container>
+        <div class="border-x p-4
+         flex flex-row bg-violet-50 text-violet-700 text-xs">
+          <div class="w-3/12 uppercase font-semibold">Alias</div>
+          <div class="w-5/12 uppercase font-semibold">Contract Traits</div>
+          <div class="w-2/12 uppercase font-semibold">Address</div>
+        </div>
+  
+        <ng-container *ngIf="deployedContracts.length > 0; else emptyList">
+          <div *ngFor="let contract of deployedContracts" routerLink="interact/{{contract.contract_id}}/{{contract.id}}"
+            class="border-gray-100 hover:bg-violet-100 border-b border-x p-4 flex flex-row cursor-pointer">
+            <div class="w-3/12 text-sm font-medium">{{ contract.alias }}</div>
+            <div class="w-5/12 text-sm pr-4 flex flex-row items-center">
+              <ng-container *ngIf="contract.contract_id.startsWith('imported'); else notImported">
+                <div class="py-1 px-4 flex flex-row justify-center
+                 items-center text-xxs uppercase font-medium text-violet-700 bg-violet-50 rounded-lg">
+                  Unknown (Imported Contract)
+                </div>
+              </ng-container>
+              <ng-template #notImported>
+                <div class="flex flex-row items-center justify-start flex-wrap overflow-x-scroll gap-1">
+                  <div class="flex px-2 flex-row items-center flex-nowrap bg-violet-50 
+                  rounded-lg text-violet-700 text-xxs font-medium uppercase">
+                    {{contract.contract_id.split('.')[contract.contract_id.split('.').length - 1]}}
+                  </div>
+                  
+                  <div class="flex px-2 flex-row items-center bg-violet-50
+                  rounded-lg text-violet-700 text-xxs flex-nowrap font-medium uppercase"
+                   *ngFor="let contractItem of contract.contract_implements">
+                    {{contractItem.split('.')[contractItem.split('.').length - 1]}}
+                  </div>
+                  
+                </div>
+                
+              </ng-template>
+            </div>
+            <div class="w-2/12 text-sm flex flex-row justify-end items-center">
+              {{ contract.contract_address | addrShort}}
+              <app-explorer-link class="ml-2" [value]="contract.contract_address"></app-explorer-link>
+              <app-value-copy class="ml-2" [value]="contract.contract_address"></app-value-copy>
+            </div>
+            <div class="w-1/12 px-2 mx-4">
+              <button class=" bg-red-100 text-red-700 hover:bg-red-700 hover:text-white 
+              text-xs rounded-full px-8 py-2  transition-all font-semibold
+              flex flex-row items-center justify-center uppercase"
+              (click)="deleteRequestClicked(contract.id, $event)">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+              class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+              </svg>              
+              <div class="ml-2">
+                Delete
+              </div>              
+              </button>
+            </div>
+            
+          </div>
+        </ng-container>
+  
+      </ng-container>
+    </div>
+
+
+
+  </ng-container>
+
+  <ng-container *ngIf="activeTab === tabType.Import">
+    <!-- <div class="border-gray-100 border-2 p-4 flex flex-row bg-gray-100 rounded-tr-lg">
+      
+    </div> -->
+    <form [@inOutAnimation] [formGroup]="importContractForm" class="border rounded-tr-lg flex flex-col rounded-b-lg p-8 text-gray-700">
+      <div class="uppercase font-semibold text-base text-violet-700 flex flex-row items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+        </svg>
+
+        Connect/import an already deployed contract
+      </div>
+
+      <div class="uppercase font-semibold mt-4 text-sm">1. Paste the Contract address</div>
+      <div *ngIf="network$ | async as network" class="text-xs uppercase font-medium mt-1 rounded-md flex flex-row items-center
+                                                    text-amber-700 bg-amber-50 py-2 px-4">
+
+       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+      </svg>
+      
+        Make sure your contract is deployed on {{network.name}}!
+      </div>
+      <input formControlName="contractAddress" class="w-full mt-1 border-gray-200 rounded-lg text-sm"
+        placeholder="0xdEaDc0FFeBAbE00c0FFe1234000" type="text" name="" id="">
+
+
+      <div class="bg-violet-50 p-4 rounded-lg mt-4">
+        <div class="text-violet-700 uppercase font-semibold text-sm">2. Give your contract an alias</div>
+        <div class="text-xs mt-1 text-gray-500">This is the alias you will use to access the imported contract through
+          the Polycode API & SDK.</div>
+        <input formControlName="alias" class="w-full mt-2 border-gray-200 rounded-lg text-sm"
+          placeholder="my-contract-alias" type="text" name="" id="">
+      </div>
+
+      <div class="uppercase font-semibold mt-4 text-sm">Contract manifest (Optional)</div>
+      <div class="text-xs mt-1 text-gray-500">The manifest of the smart contract from the
+        <a class="text-violet-700 underline" href="https://github.com/0xDev3/dev3-contracts">Dev3 database!</a>
+      </div>
+      <input formControlName="contractManifest" class="w-full mt-1 border-gray-200 rounded-lg text-sm"
+        placeholder="dev3.example-manifest" type="text" name="" id="">
+
+
+      <button [onClick]="importContractClicked()" [disabled]="!importContractForm.valid" app-action-button
+        text="Import contract" class=" app-button mt-4"></button>
+    </form>
+
+
+  </ng-container>
+</div>
+
+<ng-template #loading>
+  <div [@inOutAnimation] class="border border-gray-200 rounded-lg py-16 flex flex-row justify-center">
+    <app-spinner></app-spinner>
+  </div>
+</ng-template>
+
+<ng-template #emptyList>
+  <div [@inOutAnimation] class="border border-gray-200 rounded-x-lg rounded-b-lg py-16 flex flex-row justify-center text-sm font-medium">
+    No items available
+  </div>
+</ng-template>

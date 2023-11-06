@@ -1,0 +1,100 @@
+<div *ngIf="issuer$ | async as issuer" class="w-full h-full flex flex-row items-center text-gray-700 justify-center">
+    <div *ngIf="authRequest$ | async as authRequest" 
+    class=" bg-white w-11/12 max-w-md p-4 lg:p-8 rounded-2xl shadow-sm flex flex-col items-center">
+        <img class="w-full h-16 object-contain" [src]="issuer.infoData.logo | toUrlIPFS" alt="">
+
+        <!-- BEFORE AUTH -->
+        <div class="flex flex-col justify-center w-full" *ngIf="authRequest.status === 'PENDING'">
+            <div class="mt-4 text-sm text-center px-2">
+                <span class="font-medium text-violet-700 leading-6">
+                {{issuer.infoData.name}}</span>  <br>
+                <span class="font-medium text-gray-500">
+                    is requesting you to authorize yourself.
+                </span> 
+            </div>
+            <div *ngIf="address$ | async as address; else login" class="mt-2 text-sm">
+                <ng-container class="w-full" [ngTemplateOutlet]="addressHolder"></ng-container>
+                
+                <div *ngIf="authRequest.screen_config" class="p-4 w-full rounded-lg mt-2 flex flex-col">
+                    <div class="text-xs uppercase font-semibold text-violet-700 flex flex-row items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                          </svg>
+                          <div class="ml-2">
+                            Message from {{issuer.infoData.name}}</div>
+
+                          </div>                          
+                    <div class="ml-7 mt-1">{{authRequest.screen_config.before_action_message ?? ''}}</div>
+                </div>
+            </div>
+
+            <ng-template #login>
+                <app-auth></app-auth>
+            </ng-template>
+
+
+            <button [onClick]="authorizeButtonClicked(authRequest).bind(this)" *ngIf="address$ | async" app-action-button 
+            text="✓ Confirm authorization"
+             class="px-16 mt-8 bg-violet-700 hover:bg-violet-900 rounded-full text-xs py-2 text-white uppercase font-semibold">
+            </button>
+            <button *ngIf="isLoggedIn$ | async" app-action-button class="mt-4 uppercase font-semibold hover:text-violet-700" 
+                text="Log Out / Change Wallet Provider" [onClick]="logout().bind(this)"></button>
+
+            <div class="w-full mt-8 flex flex-col justify-center">
+                <div class="text-xs text-gray-500 text-center">
+                    Wallet authorization processing provided by
+                </div>
+                <a target="_blank" class="mt-2 flex flex-row justify-center" href="https://dev3.sh">
+                    <img class="h-4 object-contain" src="../../../../assets/polycode-logo.png" alt="" srcset="">
+                </a>
+            </div>
+        </div>
+
+        <!-- AFTER AUTH -->
+        <div class="flex flex-col items-center w-full" *ngIf="authRequest.status === 'SUCCESS'">
+            <div class="bg-green-50 text-green-700 font-medium flex flex-row items-center justify-center
+             border-green-200 mt-4 text-sm uppercase py-2 w-full text-center rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+                class="w-4 h-4 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>                  
+                Successful authorization
+            </div>
+
+            <div *ngIf="authRequest.screen_config" class="p-4 w-full  rounded-lg mt-2 flex flex-col">
+                <div class="text-xs uppercase font-semibold text-violet-700 flex flex-row items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                      </svg>
+                      <div class="ml-2">
+                        Message from {{issuer.infoData.name}}</div>
+
+                      </div>                          
+                <div class="ml-7 mt-1 text-sm">{{authRequest.screen_config.after_action_message ?? ''}}</div>
+            </div>
+            
+            <button (click)="closeTabClicked()"
+             class="px-12 py-2 bg-violet-700 mt-8 hover:bg-violet-900
+             flex flex-row items-center justify-center rounded-full text-xs text-white uppercase font-semibold">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              
+                Return to {{issuer.infoData.name}}
+            </button>
+        </div>
+        
+    </div>
+</div>
+
+<ng-template #addressHolder>
+    <div *ngIf="address$ | async as address" class="p-4 rounded-lg mt-2 pr-10 w-full">
+        <div class="text-xs w-full overflow-x-scroll uppercase font-semibold text-violet-700 flex flex-row items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
+              </svg>
+            <div *ngIf="issuer$ | async as issuer">Address</div>                  
+        </div>
+        <div class="mt-1 w-full flex flex-row overflow-x-scroll ml-7 text-xs font-medium text-gray-700">{{address}}</div>  
+    </div>
+</ng-template>

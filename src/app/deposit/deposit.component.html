@@ -1,0 +1,14 @@
+<div class="max-w-6xl mx-auto px-2 lg:px-4 flex flex-col items-center" *ngIf="state$ | async as state">
+  <div class="my-8 w-full">
+    <app-deposit-flow></app-deposit-flow>
+  </div>
+  <p class="text-center text-xs max-w-md text-gray-500">
+    <span class="font-semibold "> Note: </span>
+    You can always find alternative ways to fund the connected wallet with
+    <span>
+      {{ nativeCurrency.name }}
+    </span>
+
+    <span> on {{ state.network.name }} </span>
+  </p>
+</div>

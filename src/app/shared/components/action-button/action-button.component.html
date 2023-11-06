@@ -1,0 +1,38 @@
+<ng-container *ngIf="!loading; else loadingTemplate">
+  <ng-container *ngIf="content; else noContentTemplate">
+    <div *ngTemplateOutlet="content"></div>
+  </ng-container>
+
+  <ng-template #noContentTemplate>
+    <div class="flex justify-around">
+      <div class="flex justify-start items-center">
+        <img
+          *ngIf="iconPath"
+          class="h-6"
+          src="{{ iconPath }}"
+          alt=""
+          srcset=""
+        />
+        <span class="text-xs">{{ text }}</span>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
+
+<ng-template #loadingTemplate>
+  <ng-container *ngIf="loadingContent; else noLoadingContent">
+    <ng-container *ngTemplateOutlet="loadingContent"></ng-container>
+  </ng-container>
+  <ng-template #noLoadingContent>
+    <div class="flex justify-around">
+      <div class="flex flex-row justify-center items-center">
+        <div class="h-4 flex flex-row items-center">
+          <app-spinner type="inline-xs"> </app-spinner>
+        </div>
+        <span *ngIf="loadingText" class="ml-2 text-xs">
+          {{ loadingText }}
+        </span>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>

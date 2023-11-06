@@ -1,0 +1,21 @@
+<div [class.layout-bg]="!isInSDK"
+  class="flex flex-col min-h-screen">
+  <div *ngIf="!isInSDK"
+    id="navbarHolder"
+    class="flex justify-center top-0 left-0 z-30 sticky overflow-x-hidden"
+  >
+    <app-navbar></app-navbar>
+  </div>
+  <div class="top-2 flex flex-1">
+    <div class="flex flex-col flex-grow-1 w-full">
+      <main class="flex-1">
+        <router-outlet></router-outlet>
+      </main>
+      <footer>
+        <app-footer *ngIf="!isInSDK"></app-footer>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="crispService.keepShown$ | async"></ng-container>

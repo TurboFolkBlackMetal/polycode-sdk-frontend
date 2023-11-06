@@ -1,0 +1,65 @@
+<div *ngIf="issuer$ | async as issuer" class="flex flex-row flex-wrap ml-4">
+  <div class="w-full mt-1 mb-4">
+    <div
+    >
+      <app-info-snippet
+        [hasBorderAndBackground]="true"
+        [content]="{ title: 'Third party integrations', sections: [
+          'Polycode comes built-in with many third party plugins, enabling you to easily handle actions such as onboarding users with email, requesting users to purchase crypto with credit card, request KYC from users and more.',
+        ]}"></app-info-snippet>
+    </div>
+    
+  </div>
+
+  <div class="w-1/2 pr-2">
+    <div class=" p-8 flex flex-col font-semibold shadow-sm
+    text-gray-700 bg-white rounded-lg">
+      <div>Magic Link API Key</div>
+      <div class=" font-light text-xs text-gray-500 mb-2 mt-1">Magic Link is a custodial wallet provider. It enables your users to log-in with email, phone, social network accounts & more...</div>
+      <input [value]="issuer.infoData.magicLinkApiKey" [formControl]="magicLinkAPIKeyForm"
+       class="w-full mt-2 rounded-lg font-light text-sm border-gray-200" type="text">
+      <div class="flex flex-row justify-end w-full">
+        <button app-action-button text="Update" [onClick]="updateMagicAPIKey(issuer).bind(this)"
+        [disabled]="!magicLinkAPIKeyForm.valid" class="bg-violet-700 disabled:bg-gray-500 px-12 py-2 rounded-full
+         text-xs uppercase font-semibold text-white mt-2"></button>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="w-1/2 pl-2">
+    <div class="p-8 flex flex-col font-semibold shadow-sm
+    text-gray-700 bg-white rounded-lg">
+      <div>Ramp Network API Key</div>
+      <div class=" font-light text-xs text-gray-500 mb-2 mt-1">Ramp network is an onboarding solution, allowing people to buy crypto with credit cards and bank transfers, without breaking the app flow.</div>
+      <input [value]="issuer.infoData.rampApiKey" [formControl]="rampApiKeyControl"
+       class="w-full mt-2 rounded-lg font-light text-sm border-gray-200" type="text">
+      <div class="flex flex-row justify-end w-full">
+        <button app-action-button text="Update" [onClick]="updateRampAPIKey(issuer).bind(this)"
+        [disabled]="!magicLinkAPIKeyForm.valid" class="bg-violet-700 disabled:bg-gray-500 px-12 py-2 rounded-full
+         text-xs uppercase font-semibold text-white mt-2"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-1/2 pr-2 mt-4">
+    <div class="p-8 flex flex-col font-semibold shadow-sm
+    text-gray-700 bg-white rounded-lg">
+      <div>Crisp Chat Website ID</div>
+      <div class=" font-light text-xs text-gray-500 mb-2 mt-1">
+        Crisp Chat is a support chat widget which can appear for your users when they're executing transactions. This way, you can provide real-time support to users stuck when signing txs.
+      </div>
+      <input [value]="issuer.infoData.rampApiKey" [formControl]="crispApiKeyControl"
+       class="w-full mt-2 rounded-lg font-light text-sm border-gray-200" type="text">
+      <div class="flex flex-row justify-end w-full">
+        <button app-action-button text="Update" [onClick]="updateCrispAPIKey(issuer).bind(this)"
+        [disabled]="!magicLinkAPIKeyForm.valid" class="bg-violet-700 disabled:bg-gray-500 px-12 py-2 rounded-full
+         text-xs uppercase font-semibold text-white mt-2"></button>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+</div>

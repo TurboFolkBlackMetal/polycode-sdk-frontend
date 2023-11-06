@@ -1,0 +1,18 @@
+.active-dash-sidebar-item {
+  background-color: #4d2a9e;
+
+
+}
+
+.dash-side-holder div {
+  transition: all 200ms;
+  cursor: pointer;
+}
+
+.sidebar-width {
+  width: 16%;
+}
+
+.content-width {
+  width: 84%;
+}

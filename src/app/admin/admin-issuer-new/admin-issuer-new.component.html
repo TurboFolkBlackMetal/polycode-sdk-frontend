@@ -1,0 +1,171 @@
+<div [@inOutAnimation] class="flex flex-col justify-center h-full max-w-3xl mx-auto">
+  <div class="flex flex-row text-sm">
+    <div
+      routerLink="/"
+      class="text-sm underline text-violet-800 cursor-pointer"
+    >
+      My Workspaces
+    </div>
+    <div class="ml-2 mr-2">/</div>
+    <div>New Workspace</div>
+  </div>
+  <div class="shadow-sm rounded-2xl mt-8">
+    <app-info-snippet
+      [content]="{ title: 'Creating a Polycode workspace is the first step towards using Polycode', sections: [
+        'You can learn everything about Polycode in our docs',
+      ]}"
+      [actionLinkButton]="{ title: '📖 Read the docs', href: 'https://docs.dev3.sh' }" 
+      ></app-info-snippet>
+  </div>
+  <div *ngIf="balance$ | async as balance" class="rounded-2xl mt-2">
+    <div *ngIf="balance.eq(0)">
+      <div *ngIf="address$ | async as address">
+        <app-info-snippet
+        type="WARNING"
+        [content]="{ title: 'You\'re out of gas!', sections: [
+          'You don\'t have any gas tokens. In order to use Polycode - you need to have \'gas\' tokens to pay for writing to blockchain!',
+          'Want to try Polycode for free? You can get free gas tokens if you make your project on the Mumbai Network. Switch the project netowrk (below) to Mumbai!'
+        ]}"></app-info-snippet>
+        <div *ngIf="network$ | async as network">
+          <div class="text-sm text-gray-700 my-4 bg-blue-50 border-blue-100 border
+          shadow-sm p-4 rounded-lg leading-loose" *ngIf="network.shortName === 'mumbai'">
+            You can can get gas tokens for free on <a class="text-violet-700 underline" href="https://faucet.polygon.technology/" target="_blank">this link.</a>
+            <br> Open the link, select 'Mumbai' network, 'MATIC' tokens, paste your wallet address 
+            ({{address | addrShort}} <app-value-copy [value]="address"></app-value-copy> ) 
+            and click 'Submit'. <br> You will receive the tokens within 2 - 5 minutes. Refresh this page, until you no longer see this message.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div [@inOutAnimation] class="bg-white flex flex-col shadow-sm mb-8 mt-2 p-8 rounded-2xl">
+    <form class="flex flex-col" [formGroup]="createForm">
+      <div class="flex flex-col gap-4">
+        <div class="hidden flex-col gap-2">
+          <label
+            class="text-sm font-semibold text-gray-700 uppercase"
+            for="logo"
+          >
+            Logo
+          </label>
+          <div class="relative w-full  lg:w-72">
+            <div class="flex justify-center w-full absolute top-32 lg:top-40">
+              <label
+                class="flex items-center gap-4 px-8 py-2 rounded-full bg-violet-700 text-white text-lg cursor-pointer"
+              >
+                <input
+                  class="hidden"
+                  type="file"
+                  formControlName="logo"
+                  id="logo"
+                  multiple
+                />
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 1V6M6 6V11M6 6H11M6 6H1"
+                    stroke="white"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span class="text-sm white">Upload logo</span>
+              </label>
+            </div>
+            <img
+              *ngIf="createForm.get('logo')?.value?.[0]; else noImage"
+              class="w-full h-48 lg:h-56 object-contain"
+              [src]="(createForm.get('logo')?.value?.[0] | safe:'fileUrl') | toUrlIPFS"
+              alt="Issuer logo"
+            />
+            <ng-template #noImage>
+              <div
+                class="w-full h-48 lg:h-56 border-gray-200 border rounded-xl"
+              ></div>
+            </ng-template>
+          </div>
+        </div>
+        <label
+              class="text-sm font-semibold text-gray-700 uppercase"
+              for="name"
+            >
+              Create a new workspace
+            </label>
+        <!-- <div class="w-full">
+          <app-select-network></app-select-network>
+        </div> -->
+
+        <div class="w-full">
+          <div class="flex flex-col w-full gap-2">
+            
+            <input
+              class="border-gray-200 rounded-lg text-sm w-full"
+              type="text"
+              placeholder="Workspace name"
+              formControlName="name"
+              id="name"
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- <div class="flex flex-col mt-2">
+            <label
+              class="text-sm mb-2 mt-2 font-semibold text-gray-700 uppercase"
+              for="name"
+            >
+              Project network
+            </label>
+            <app-select-network></app-select-network>
+          </div> -->
+
+          <div class="hidden flex-col gap-2 mt-4">
+            <label
+              class="text-sm uppercase text-gray-700 font-semibold"
+              for="slug"
+            >
+              Project link
+            </label>
+            <div class="flex items-baseline gap-2">
+              <div class="text-sm shrink-0">
+                {{ issuerUrlPrefix | addrShort: 12:20 }}
+              </div>
+              <input
+                class="border-gray-300 text-xs rounded-lg w-full"
+                type="text"
+                formControlName="slug"
+                id="slug"
+                placeholder="slug"
+                autocomplete="off"
+              />
+            </div>
+            <div
+              class="text-xs text-red-600"
+              *ngIf="createForm.get('slug')?.errors?.pattern"
+            >
+              Incorrect value. Allowed input: a-z, 0-9, -, _.
+            </div>
+          </div>
+          <div class="flex flex-row justify-end w-full mt-4 items-end">
+            <button
+              app-action-button
+              class="app-button !rounded-lg !w-full"
+              text="Create"
+              [disabled]="!createForm.valid"
+              [onClick]="create.bind(this)"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-container *ngIf="updateSlugFromName$ | async"></ng-container>

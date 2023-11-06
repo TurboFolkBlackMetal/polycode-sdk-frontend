@@ -1,0 +1,32 @@
+<div class="flex flex-row items-center gap-2 flex-wrap w-full" *ngIf="!isNetworkFixed">
+
+  <!-- <select
+    name="network"
+    id="network"
+    (change)="networkChanged($event)"
+    class="w-full border rounded-lg border-gray-200 bg-transparent text-gray-700 font-semibold"
+  >
+    <option
+      *ngFor="let network of networks"
+      [selected]="currentNetwork === network"
+      [value]="network.chainID"
+    >
+      {{ network.name }}
+    </option>
+  </select> -->
+
+  <div class="rounded-lg transition-all bg-violet-100 hover:bg-violet-200 flex flex-row items-center
+       cursor-pointer px-4 py-2 text-xs"
+       *ngFor="let network of networks"
+       (click)="networkChanged(network)"
+       [class.!bg-violet-700]="currentNetwork === network"
+       [class.text-white]="currentNetwork === network">
+    <img class=" h-4 w-4 mr-2 rounded-full" [src]="network.iconURL" 
+         alt="" 
+         srcset="">
+    <div>
+      {{network.name}}
+    </div>
+  </div>
+  
+</div>
